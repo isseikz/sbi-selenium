@@ -6,7 +6,7 @@ from .credential import Credential
 from .login_page import LoginPage
 
 
-class GetAssetPriceService:
+class GetAssetPageService:
     __asset_page: Final[AssetPage]
     def __init__(self, driver: webdriver):
         self.__asset_page = self.__get_asset_page(driver)

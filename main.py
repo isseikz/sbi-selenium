@@ -1,6 +1,6 @@
 from selenium import webdriver
 import chromedriver_binary
-from src.domain.get_asset_price_service import GetAssetPriceService
+from domain.get_asset_page_service import GetAssetPageService
 
 def driver_init():
     options = webdriver.ChromeOptions()
@@ -9,5 +9,5 @@ def driver_init():
 
 driver = driver_init()
 
-print(GetAssetPriceService(driver=driver).asset_page().products())
+print(GetAssetPageService(driver=driver).asset_page().products())
 # TODO Send asset to server
