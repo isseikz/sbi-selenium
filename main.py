@@ -20,7 +20,7 @@ cred_sbi = CredentialSbi(
 cred_firestore = CredentialFirestore(
     os.environ.get('FIRESTORE_PROJECT_ID'),
     os.environ.get('FIRESTORE_PROJECT_KEY_ID'),
-    os.environ.get('FIRESTORE_PRIVATE_KEY'),
+    os.environ.get('FIRESTORE_PRIVATE_KEY').replace('\\n', '\n'),
     os.environ.get('FIRESTORE_CLIENT_EMAIL'),
     os.environ.get('FIRESTORE_CLIENT_ID'),
     os.environ.get('FIRESTORE_CLIENT_X509_CERT_URL'),
