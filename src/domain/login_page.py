@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
-from .credential import Credential
+from .credential import CredentialSbi
 
 
 class LoginPage:
@@ -20,7 +20,7 @@ class LoginPage:
         except NoSuchElementException:
             raise ValueError('current page is not login page.')
 
-    def login(self, cred: Credential):
+    def login(self, cred: CredentialSbi):
         self.input_user.send_keys(cred.id)
         self.input_pass.send_keys(cred.password)
         self.button_login.click()

@@ -1,9 +1,12 @@
+from datetime import datetime
 from typing import Final
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
+
+from .obtained_time import ObtainedTime
 
 from .asset import Asset
 
@@ -15,6 +18,7 @@ class AssetPage:
         if not self.__is_asset_page(driver):
             raise ValueError('current page is not asset page.')
         
+        obtainedTime = ObtainedTime(datetime.now())
         driver.find_element(by=By.ID, value='balance')
 
         product_table: WebElement = driver.find_element(by=By.XPATH, value='/html/body/div[1]/main/section[2]/ul[1]')
@@ -23,7 +27,7 @@ class AssetPage:
         for row in product_rows:
             asset: WebElement = row.find_element(By.CLASS_NAME, value='css-1cg2qv2').find_element(By.TAG_NAME, value='a')
             product: WebElement = row.find_element(By.CLASS_NAME, value='css-kthg1q')
-            products.append(Asset(asset.text, self.__parse_price(product.text)))
+            products.append(Asset(asset.text, self.__parse_price(product.text), obtainedTime))
         self.__products = products
 
     def products(self):

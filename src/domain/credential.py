@@ -1,5 +1,5 @@
 from typing import Final
-class Credential:
+class CredentialSbi:
     id: Final[str]
     password: Final[str]
 
