@@ -23,7 +23,7 @@ cred_firestore = CredentialFirestore(
     os.environ.get('FIRESTORE_PRIVATE_KEY'),
     os.environ.get('FIRESTORE_CLIENT_EMAIL'),
     os.environ.get('FIRESTORE_CLIENT_ID'),
-    os.environ.get('FIRESTORE_CLIENT_x509_CERT_URL'),
+    os.environ.get('FIRESTORE_CLIENT_X509_CERT_URL'),
 )
 
 SaveMyAssetsToFirestore(driver, cred_sbi, cred_firestore).exec()
