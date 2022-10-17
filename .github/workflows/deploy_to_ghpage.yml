@@ -28,11 +28,11 @@ jobs:
           cache: true
       - run: flutter --version
       - run: cd dashboard && flutter pub get
-      - run: flutter build web --web-renderer html --base-href /${{ steps.version.outputs.repository }}/ --dart-define=DASHBOARD_FIRESTORE_API_KEY=${{secrets.DASHBOARD_FIRESTORE_API_KEY}} --dart-define=DASHBOARD_FIRESTORE_AUTH_DOMAIN=${{secrets.DASHBOARD_FIRESTORE_AUTH_DOMAIN}} --dart-define=DASHBOARD_FIRESTORE_APP_ID=${{secrets.DASHBOARD_FIRESTORE_APP_ID}} --dart-define=DASHBOARD_FIRESTORE_MSG_SENDER_ID=${{secrets.DASHBOARD_FIRESTORE_MSG_SENDER_ID}} --dart-define=DASHBOARD_FIRESTORE_PROJECT_ID=${{secrets.DASHBOARD_FIRESTORE_PROJECT_ID}} --dart-define=DASHBOARD_FIRESTORE_STORAGE_BUCKET=${{secrets.DASHBOARD_FIRESTORE_STORAGE_BUCKET}}
+      - run: cd dashboard && flutter build web --web-renderer html --base-href /${{ steps.version.outputs.repository }}/ --dart-define=DASHBOARD_FIRESTORE_API_KEY=${{secrets.DASHBOARD_FIRESTORE_API_KEY}} --dart-define=DASHBOARD_FIRESTORE_AUTH_DOMAIN=${{secrets.DASHBOARD_FIRESTORE_AUTH_DOMAIN}} --dart-define=DASHBOARD_FIRESTORE_APP_ID=${{secrets.DASHBOARD_FIRESTORE_APP_ID}} --dart-define=DASHBOARD_FIRESTORE_MSG_SENDER_ID=${{secrets.DASHBOARD_FIRESTORE_MSG_SENDER_ID}} --dart-define=DASHBOARD_FIRESTORE_PROJECT_ID=${{secrets.DASHBOARD_FIRESTORE_PROJECT_ID}} --dart-define=DASHBOARD_FIRESTORE_STORAGE_BUCKET=${{secrets.DASHBOARD_FIRESTORE_STORAGE_BUCKET}}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
+          publish_dir: ./dashboard/build/web
           
