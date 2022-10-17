@@ -1,6 +1,31 @@
+import 'package:dashboard/asset_data.dart';
+import 'package:dashboard/asset_data_repository.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
-void main() {
+import 'daily_value.dart';
+import 'repository/firestore_credential.dart';
+import 'repository/firestore_datastore.dart';
+
+void main() async {
+  final cred = FirestoreCredential(
+      const String.fromEnvironment("DASHBOARD_FIRESTORE_API_KEY"),
+      const String.fromEnvironment("DASHBOARD_FIRESTORE_AUTH_DOMAIN"),
+      const String.fromEnvironment("DASHBOARD_FIRESTORE_APP_ID"),
+      const String.fromEnvironment("DASHBOARD_FIRESTORE_MSG_SENDER_ID"),
+      const String.fromEnvironment("DASHBOARD_FIRESTORE_PROJECT_ID"),
+      const String.fromEnvironment("DASHBOARD_FIRESTORE_STORAGE_BUCKET"));
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+          apiKey: cred.apiKey,
+          authDomain: cred.authDomain,
+          projectId: cred.projectId,
+          storageBucket: cred.storageBucket,
+          messagingSenderId: cred.messagingSenderId,
+          appId: cred.appId));
   runApp(const MyApp());
 }
 
@@ -21,14 +46,29 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
   final String title;
+
+  const MyHomePage({super.key, required this.title});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final AssetDataRepository _repository =
+      FirestoreDataStore(); // SampleRepository();
+  List<AssetData> _assets = List.empty();
+
+  _MyHomePageState();
+
+  @override
+  void initState() {
+    _repository.query().then(((value) => setState(() {
+          _assets = value;
+        })));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +78,35 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
+          children: <Widget>[
+            SfCartesianChart(
+                primaryXAxis: CategoryAxis(),
+                title: ChartTitle(text: 'My Assets'),
+                legend: Legend(isVisible: true),
+                // Enable tooltip
+                tooltipBehavior: TooltipBehavior(enable: true),
+                series: _assets
+                    .map<ChartSeries<DailyValue, String>>(
+                      (e) => LineSeries(
+                          dataSource: sortByTime(e.data),
+                          xValueMapper: ((DailyValue datum, index) =>
+                              "${datum.date.month}/${datum.date.day}"),
+                          yValueMapper: ((DailyValue datum, index) =>
+                              datum.value),
+                          name: e.name,
+                          dataLabelSettings:
+                              const DataLabelSettings(isVisible: true)),
+                    )
+                    .toList())
+          ],
         ),
       ),
     );
+  }
+
+  List<DailyValue> sortByTime(List<DailyValue> original) {
+    original.sort(((a, b) => a.date.millisecondsSinceEpoch
+        .compareTo(b.date.millisecondsSinceEpoch)));
+    return original;
   }
 }
