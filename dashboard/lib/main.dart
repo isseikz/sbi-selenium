@@ -71,6 +71,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final assetSortedByLastValue = _assets.toList(growable: false);
+    assetSortedByLastValue
+        .sort(((a, b) => b.data.last.value.compareTo(a.data.last.value)));
+    var sum = 0;
+    for (var element in assetSortedByLastValue) {
+      sum = sum + element.data.last.value;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -79,13 +86,33 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SfCircularChart(
+              title: ChartTitle(text: "Latest asset values"),
+              legend: Legend(isVisible: true),
+              tooltipBehavior: TooltipBehavior(enable: true),
+              series: <CircularSeries>[
+                PieSeries<AssetData, String>(
+                    dataSource: assetSortedByLastValue,
+                    xValueMapper: (datum, index) => datum.name,
+                    yValueMapper: (datum, index) => datum.data.last.value,
+                    dataLabelSettings: const DataLabelSettings(isVisible: true))
+              ],
+              annotations: [
+                CircularChartAnnotation(
+                    widget: Text(
+                  sum.toString(),
+                  style: const TextStyle(
+                      color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 25),
+                ))
+              ],
+            ),
             SfCartesianChart(
                 primaryXAxis: CategoryAxis(),
                 title: ChartTitle(text: 'My Assets'),
                 legend: Legend(isVisible: true),
                 // Enable tooltip
                 tooltipBehavior: TooltipBehavior(enable: true),
-                series: _assets
+                series: assetSortedByLastValue
                     .map<ChartSeries<DailyValue, String>>(
                       (e) => LineSeries(
                           dataSource: sortByTime(e.data),
