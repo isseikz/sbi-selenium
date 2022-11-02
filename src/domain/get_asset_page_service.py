@@ -19,4 +19,8 @@ class GetAssetPageService:
             return AssetPage(driver=driver)
         except ValueError:
             LoginPage(driver=driver).login(CredentialSbi(credential.id, credential.password))
-            return AssetPage(driver=driver)
+            try:
+                return AssetPage(driver=driver)
+            except:
+                # From Important Notice page to asset page
+                return AssetPage(driver=driver)
