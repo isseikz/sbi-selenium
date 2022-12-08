@@ -21,13 +21,17 @@ class AssetPage:
         obtainedTime = ObtainedTime(datetime.now())
         driver.find_element(by=By.ID, value='balance')
 
-        product_table: WebElement = driver.find_element(by=By.XPATH, value='/html/body/div[1]/main/section[2]/ul[1]')
+        product_table: WebElement = driver.find_element(by=By.XPATH, value='//*[@id="balance"]/ul')
         product_rows: WebElement = product_table.find_elements(By.CLASS_NAME, value='table-row')
         products = []
         for row in product_rows:
-            asset: WebElement = row.find_element(By.CLASS_NAME, value='css-1cg2qv2').find_element(By.TAG_NAME, value='a')
-            product: WebElement = row.find_element(By.CLASS_NAME, value='css-kthg1q')
-            products.append(Asset(asset.text, self.__parse_price(product.text), obtainedTime))
+            try:
+                asset: WebElement = row.find_element(By.CLASS_NAME, value='item-content').find_element(By.CLASS_NAME, value='link')
+                product_box: WebElement = row.find_element(By.XPATH, value='div[2]')
+                product: WebElement = product_box.find_element(By.TAG_NAME, value='p')
+                products.append(Asset(asset.text, self.__parse_price(product.text), obtainedTime))
+            except NoSuchElementException:
+                continue
         self.__products = products
 
     def products(self):
