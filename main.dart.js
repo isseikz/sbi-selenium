@@ -7763,7 +7763,7 @@ o=A
 s=3
 return A.a9(A.YD(A.alD("AIzaSyDCv6ztYOHQ_4mqhbA3JYGIrlPzccu_MWk","1:687788315885:web:fa1df31df86ef8aaec68e4","sbi-my-assets.firebaseapp.com",null,null,"687788315885","sbi-my-assets","sbi-my-assets.appspot.com")),$async$BB)
 case 3:s=2
-return A.a9(new p.TI(o.av5(b),new A.Yz("")).lw(),$async$BB)
+return A.a9(new p.TI(o.av5(b),new A.Yz("687788315885-hakpbgme0jm84tl1oko40unbe0n9bf7f.apps.googleusercontent.com")).lw(),$async$BB)
 case 2:if($.aM==null)A.anB()
 q=$.aM
 q.MB(B.EU)
