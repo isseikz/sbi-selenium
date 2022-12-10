@@ -1,31 +1,34 @@
 import 'package:dashboard/asset_data.dart';
 import 'package:dashboard/asset_data_repository.dart';
+import 'package:dashboard/domain/authentication_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'daily_value.dart';
+import 'domain/firebase_credential.dart';
 import 'repository/firestore_credential.dart';
 import 'repository/firestore_datastore.dart';
 
 void main() async {
-  final cred = FirestoreCredential(
-      const String.fromEnvironment("DASHBOARD_FIRESTORE_API_KEY"),
-      const String.fromEnvironment("DASHBOARD_FIRESTORE_AUTH_DOMAIN"),
-      const String.fromEnvironment("DASHBOARD_FIRESTORE_APP_ID"),
-      const String.fromEnvironment("DASHBOARD_FIRESTORE_MSG_SENDER_ID"),
-      const String.fromEnvironment("DASHBOARD_FIRESTORE_PROJECT_ID"),
-      const String.fromEnvironment("DASHBOARD_FIRESTORE_STORAGE_BUCKET"));
+  final credFirestore = FirestoreCredential.loadEnvironment();
+  final credAuthentication = FirebaseCredential.loadEnvironment();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
+
+  final firebase = await Firebase.initializeApp(
       options: FirebaseOptions(
-          apiKey: cred.apiKey,
-          authDomain: cred.authDomain,
-          projectId: cred.projectId,
-          storageBucket: cred.storageBucket,
-          messagingSenderId: cred.messagingSenderId,
-          appId: cred.appId));
+          apiKey: credFirestore.apiKey,
+          authDomain: credFirestore.authDomain,
+          projectId: credFirestore.projectId,
+          storageBucket: credFirestore.storageBucket,
+          messagingSenderId: credFirestore.messagingSenderId,
+          appId: credFirestore.appId));
+
+  final auth = FirebaseAuth.instanceFor(app: firebase);
+  await AuthenticationService(auth, credAuthentication).signInWithGoogle();
+
   runApp(const MyApp());
 }
 

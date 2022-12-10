@@ -10,8 +10,6 @@ def driver_init():
     options.add_argument('--headless')
     return webdriver.Chrome(options=options)
 
-driver = driver_init()
-
 cred_sbi = CredentialSbi(
     os.environ.get('SBI_ID'),
     os.environ.get('SBI_PASS')
@@ -25,5 +23,7 @@ cred_firestore = CredentialFirestore(
     os.environ.get('FIRESTORE_CLIENT_ID'),
     os.environ.get('FIRESTORE_CLIENT_X509_CERT_URL'),
 )
+
+driver = driver_init()
 
 SaveMyAssetsToFirestore(driver, cred_sbi, cred_firestore).exec()
