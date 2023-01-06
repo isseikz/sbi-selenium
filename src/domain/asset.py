@@ -10,12 +10,13 @@ class Asset:
     time: Final[ObtainedTime]
 
     def __init__(self, name: str, value: int, time: ObtainedTime):
+        non_negative = value
         if (len(name) <= 0):
             raise ValueError('asset name must not be null or empty')
         if (value < 0):
-            raise ValueError('asset value must not be negative')
+            non_negative = 0
         self.name = name
-        self.value = value
+        self.value = non_negative
         self.time = time
 
     def __str__(self) -> str:

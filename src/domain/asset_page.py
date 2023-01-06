@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from .obtained_time import ObtainedTime
 
@@ -16,7 +16,6 @@ class AssetPage:
 
     def __init__(self, driver: webdriver):
         driver.get('https://site.sbisec.co.jp/account/assets')
-        self.wait_for_loading_page(driver=driver)
         if not self.__is_asset_page(driver):
             raise ValueError('current page is not asset page.')
         
@@ -39,14 +38,13 @@ class AssetPage:
     def products(self):
         return self.__products.copy()
     
-    def wait_for_loading_page(self, driver: webdriver):
-        WebDriverWait(driver, timeout=5).until(lambda d: d.find_element(by=By.ID,value="balance"))
-    
     def __is_asset_page(self, driver: webdriver):
         try:
-            driver.find_element(by=By.ID, value='balance')
+            WebDriverWait(driver, timeout=5).until(lambda d: d.find_element(by=By.ID, value="balance"))
             return True
         except NoSuchElementException:
+            return False
+        except TimeoutException:
             return False
     
     def __parse_price(self, priceStr: str):
