@@ -1,9 +1,11 @@
 import os
 from selenium import webdriver
-import chromedriver_binary
+import chromedriver_autoinstaller
 from src.application.save_my_assets_to_firestore import SaveMyAssetsToFirestore
 from src.domain.credential import CredentialSbi
 from src.repository.firestore_credential import CredentialFirestore
+
+chromedriver_autoinstaller.install()  
 
 def driver_init():
     options = webdriver.ChromeOptions()
