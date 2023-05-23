@@ -32,6 +32,20 @@ void main() async {
   runApp(const MyApp());
 }
 
+int calcTotalValue(List<AssetData> assets) {
+  var sum = 0;
+  for (var element in assets) {
+    sum = sum + element.data.last.value;
+  }
+  return sum;
+}
+
+List<AssetData> sortAsset(List<AssetData> assets) {
+  var sorted = assets.toList(growable: false);
+  sorted.sort(((a, b) => b.data.last.value.compareTo(a.data.last.value)));
+  return sorted;
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -74,13 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final assetSortedByLastValue = _assets.toList(growable: false);
-    assetSortedByLastValue
-        .sort(((a, b) => b.data.last.value.compareTo(a.data.last.value)));
-    var sum = 0;
-    for (var element in assetSortedByLastValue) {
-      sum = sum + element.data.last.value;
-    }
+    final assetSortedByLastValue = sortAsset(_assets);
+    final total = calcTotalValue(_assets);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -103,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
               annotations: [
                 CircularChartAnnotation(
                     widget: Text(
-                  sum.toString(),
+                  total.toString(),
                   style: const TextStyle(
                       color: Color.fromRGBO(0, 0, 0, 0.5), fontSize: 25),
                 ))
